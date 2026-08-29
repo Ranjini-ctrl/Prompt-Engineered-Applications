@@ -1,0 +1,369 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Profile - Draw It</title>
+    <link href="https://fonts.googleapis.com/css2?family=Fredoka:wght@300;400;500;600;700&family=Baloo+2:wght@400;500;600;700;800&family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="css/style.css">
+    <link rel="stylesheet" href="css/animations.css">
+    <link rel="stylesheet" href="css/claymorphism.css">
+    <link rel="stylesheet" href="css/responsive.css">
+</head>
+<body class="profile-page">
+    <!-- Background Decorations -->
+    <div class="bg-decorations">
+        <div class="cloud cloud-1"></div>
+        <div class="star star-1">⭐</div>
+        <div class="balloon balloon-1">🎈</div>
+    </div>
+
+    <!-- Header -->
+    <div class="profile-header">
+        <a href="home.html" class="btn btn-small">← Home</a>
+        <h1>👤 My Profile</h1>
+    </div>
+
+    <div class="container">
+        <!-- Profile Card -->
+        <div class="profile-container">
+            <div class="profile-card clay-card">
+                <div class="profile-avatar-section">
+                    <div class="profile-avatar-large" id="profileAvatar">👦</div>
+                    <button id="changeAvatarBtn" class="btn btn-small">Change Avatar</button>
+                </div>
+
+                <div class="profile-info">
+                    <h2 id="profileUsername">Artist Name</h2>
+                    <p id="profileEmail">artist@email.com</p>
+                    
+                    <div class="profile-stats">
+                        <div class="stat-box">
+                            <div class="stat-icon">🎨</div>
+                            <div class="stat-content">
+                                <span class="stat-number" id="totalDrawings">0</span>
+                                <span class="stat-label">Total Drawings</span>
+                            </div>
+                        </div>
+                        
+                        <div class="stat-box">
+                            <div class="stat-icon">🌈</div>
+                            <div class="stat-content">
+                                <span class="stat-color" id="favoriteColor">--</span>
+                                <span class="stat-label">Favorite Color</span>
+                            </div>
+                        </div>
+                        
+                        <div class="stat-box">
+                            <div class="stat-icon">📅</div>
+                            <div class="stat-content">
+                                <span class="stat-date" id="joinedDate">--</span>
+                                <span class="stat-label">Joined</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="profile-actions">
+                    <button id="editProfileBtn" class="btn btn-primary">Edit Profile</button>
+                    <button id="logoutBtn" class="btn btn-outline">Logout</button>
+                </div>
+            </div>
+
+            <!-- Settings Card -->
+            <div class="settings-card clay-card">
+                <h3>⚙️ Settings</h3>
+                
+                <div class="setting-item">
+                    <div class="setting-label">
+                        <span>🌙 Dark Mode</span>
+                    </div>
+                    <label class="toggle-switch">
+                        <input type="checkbox" id="darkModeToggle">
+                        <span class="toggle-slider"></span>
+                    </label>
+                </div>
+
+                <div class="setting-item">
+                    <div class="setting-label">
+                        <span>🎵 Music</span>
+                    </div>
+                    <label class="toggle-switch">
+                        <input type="checkbox" id="musicToggle">
+                        <span class="toggle-slider"></span>
+                    </label>
+                </div>
+
+                <div class="setting-item">
+                    <div class="setting-label">
+                        <span>🔔 Sound Effects</span>
+                    </div>
+                    <label class="toggle-switch">
+                        <input type="checkbox" id="soundToggle" checked>
+                        <span class="toggle-slider"></span>
+                    </label>
+                </div>
+
+                <div class="setting-item">
+                    <div class="setting-label">
+                        <span>💾 Auto-save (10s)</span>
+                    </div>
+                    <label class="toggle-switch">
+                        <input type="checkbox" id="autosaveToggle" checked>
+                        <span class="toggle-slider"></span>
+                    </label>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Avatar Selection Modal -->
+    <div id="avatarModal" class="modal">
+        <div class="modal-content clay-card">
+            <h2>Choose Your Avatar</h2>
+            <div class="avatar-selector">
+                <div class="avatar-option" data-avatar="boy">
+                    <div class="avatar-circle">👦</div>
+                    <span>Boy</span>
+                </div>
+                <div class="avatar-option" data-avatar="girl">
+                    <div class="avatar-circle">👧</div>
+                    <span>Girl</span>
+                </div>
+                <div class="avatar-option" data-avatar="cat">
+                    <div class="avatar-circle">🐱</div>
+                    <span>Cat</span>
+                </div>
+                <div class="avatar-option" data-avatar="rabbit">
+                    <div class="avatar-circle">🐰</div>
+                    <span>Rabbit</span>
+                </div>
+                <div class="avatar-option" data-avatar="fox">
+                    <div class="avatar-circle">🦊</div>
+                    <span>Fox</span>
+                </div>
+                <div class="avatar-option" data-avatar="panda">
+                    <div class="avatar-circle">🐼</div>
+                    <span>Panda</span>
+                </div>
+            </div>
+            <button id="closeAvatarModal" class="btn btn-outline">Cancel</button>
+        </div>
+    </div>
+
+    <!-- Edit Profile Modal -->
+    <div id="editModal" class="modal">
+        <div class="modal-content clay-card">
+            <h2>Edit Profile</h2>
+            <form id="editProfileForm">
+                <div class="form-group">
+                    <label for="editUsername">Username</label>
+                    <input type="text" id="editUsername" required>
+                </div>
+                <div class="form-group">
+                    <label for="editEmail">Email</label>
+                    <input type="email" id="editEmail" required>
+                </div>
+                <div class="modal-buttons">
+                    <button type="submit" class="btn btn-primary">Save Changes</button>
+                    <button type="button" id="closeEditModal" class="btn btn-outline">Cancel</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <script>
+        // Check authentication
+        if (!localStorage.getItem('drawit_currentUser')) {
+            window.location.href = 'login.html';
+        }
+
+        const avatars = {
+            boy: '👦', girl: '👧', cat: '🐱',
+            rabbit: '🐰', fox: '🦊', panda: '🐼'
+        };
+
+        document.addEventListener('DOMContentLoaded', () => {
+            loadProfile();
+            setupSettings();
+            setupModals();
+        });
+
+        function loadProfile() {
+            const currentUser = localStorage.getItem('drawit_currentUser');
+            const users = JSON.parse(localStorage.getItem('drawit_users') || '[]');
+            const user = users.find(u => u.email === currentUser);
+            
+            if (!user) {
+                window.location.href = 'login.html';
+                return;
+            }
+            
+            document.getElementById('profileAvatar').textContent = avatars[user.avatar];
+            document.getElementById('profileUsername').textContent = user.username;
+            document.getElementById('profileEmail').textContent = user.email;
+            
+            const allDrawings = JSON.parse(localStorage.getItem('drawit_drawings') || '[]');
+            const userDrawings = allDrawings.filter(d => d.userId === user.id);
+            document.getElementById('totalDrawings').textContent = userDrawings.length;
+            
+            const favoriteColorEl = document.getElementById('favoriteColor');
+            favoriteColorEl.textContent = user.favoriteColor || '#FF70A6';
+            favoriteColorEl.style.color = user.favoriteColor || '#FF70A6';
+            
+            const date = new Date(user.joinedDate);
+            document.getElementById('joinedDate').textContent = date.toLocaleDateString('en-US', {
+                year: 'numeric',
+                month: 'short',
+                day: 'numeric'
+            });
+            
+            // Logout
+            document.getElementById('logoutBtn').addEventListener('click', () => {
+                if (confirm('Are you sure you want to logout?')) {
+                    localStorage.removeItem('drawit_currentUser');
+                    alert('Logged out successfully!');
+                    window.location.href = 'index.html';
+                }
+            });
+        }
+
+        function setupSettings() {
+            const settings = JSON.parse(localStorage.getItem('drawit_settings') || '{}');
+            
+            const darkModeToggle = document.getElementById('darkModeToggle');
+            darkModeToggle.checked = settings.darkMode || false;
+            darkModeToggle.addEventListener('change', function() {
+                settings.darkMode = this.checked;
+                localStorage.setItem('drawit_settings', JSON.stringify(settings));
+                if (this.checked) {
+                    document.body.classList.add('dark-mode');
+                } else {
+                    document.body.classList.remove('dark-mode');
+                }
+                alert(`Dark mode ${this.checked ? 'enabled' : 'disabled'}`);
+            });
+            
+            const musicToggle = document.getElementById('musicToggle');
+            musicToggle.checked = settings.music || false;
+            musicToggle.addEventListener('change', function() {
+                settings.music = this.checked;
+                localStorage.setItem('drawit_settings', JSON.stringify(settings));
+                alert(`Music ${this.checked ? 'enabled' : 'disabled'}`);
+            });
+            
+            const soundToggle = document.getElementById('soundToggle');
+            soundToggle.checked = settings.sound !== false;
+            soundToggle.addEventListener('change', function() {
+                settings.sound = this.checked;
+                localStorage.setItem('drawit_settings', JSON.stringify(settings));
+                alert(`Sound effects ${this.checked ? 'enabled' : 'disabled'}`);
+            });
+            
+            const autosaveToggle = document.getElementById('autosaveToggle');
+            autosaveToggle.checked = settings.autosave !== false;
+            autosaveToggle.addEventListener('change', function() {
+                settings.autosave = this.checked;
+                localStorage.setItem('drawit_settings', JSON.stringify(settings));
+                alert(`Auto-save ${this.checked ? 'enabled' : 'disabled'}`);
+            });
+        }
+
+        function setupModals() {
+            // Change avatar
+            const changeAvatarBtn = document.getElementById('changeAvatarBtn');
+            const avatarModal = document.getElementById('avatarModal');
+            const closeAvatarModal = document.getElementById('closeAvatarModal');
+            
+            changeAvatarBtn.addEventListener('click', () => {
+                avatarModal.classList.add('active');
+            });
+            
+            closeAvatarModal.addEventListener('click', () => {
+                avatarModal.classList.remove('active');
+            });
+            
+            document.querySelectorAll('#avatarModal .avatar-option').forEach(option => {
+                option.addEventListener('click', function() {
+                    const newAvatar = this.dataset.avatar;
+                    const currentUser = localStorage.getItem('drawit_currentUser');
+                    const users = JSON.parse(localStorage.getItem('drawit_users') || '[]');
+                    const userIndex = users.findIndex(u => u.email === currentUser);
+                    
+                    if (userIndex !== -1) {
+                        users[userIndex].avatar = newAvatar;
+                        localStorage.setItem('drawit_users', JSON.stringify(users));
+                        document.getElementById('profileAvatar').textContent = avatars[newAvatar];
+                        alert('Avatar updated! 🎨');
+                        avatarModal.classList.remove('active');
+                    }
+                });
+            });
+            
+            // Edit profile
+            const editProfileBtn = document.getElementById('editProfileBtn');
+            const editModal = document.getElementById('editModal');
+            const closeEditModal = document.getElementById('closeEditModal');
+            const editProfileForm = document.getElementById('editProfileForm');
+            
+            editProfileBtn.addEventListener('click', () => {
+                const currentUser = localStorage.getItem('drawit_currentUser');
+                const users = JSON.parse(localStorage.getItem('drawit_users') || '[]');
+                const user = users.find(u => u.email === currentUser);
+                
+                document.getElementById('editUsername').value = user.username;
+                document.getElementById('editEmail').value = user.email;
+                editModal.classList.add('active');
+            });
+            
+            closeEditModal.addEventListener('click', () => {
+                editModal.classList.remove('active');
+            });
+            
+            editProfileForm.addEventListener('submit', (e) => {
+                e.preventDefault();
+                
+                const newUsername = document.getElementById('editUsername').value.trim();
+                const newEmail = document.getElementById('editEmail').value.trim();
+                
+                if (!newUsername) {
+                    alert('Username cannot be empty');
+                    return;
+                }
+                
+                if (!newEmail || !newEmail.includes('@')) {
+                    alert('Invalid email address');
+                    return;
+                }
+                
+                const currentUser = localStorage.getItem('drawit_currentUser');
+                const users = JSON.parse(localStorage.getItem('drawit_users') || '[]');
+                const userIndex = users.findIndex(u => u.email === currentUser);
+                
+                if (userIndex !== -1) {
+                    users[userIndex].username = newUsername;
+                    users[userIndex].email = newEmail;
+                    localStorage.setItem('drawit_users', JSON.stringify(users));
+                    localStorage.setItem('drawit_currentUser', newEmail);
+                    alert('Profile updated successfully! ✨');
+                    loadProfile();
+                    editModal.classList.remove('active');
+                }
+            });
+            
+            // Close on background click
+            avatarModal.addEventListener('click', (e) => {
+                if (e.target === avatarModal) {
+                    avatarModal.classList.remove('active');
+                }
+            });
+            
+            editModal.addEventListener('click', (e) => {
+                if (e.target === editModal) {
+                    editModal.classList.remove('active');
+                }
+            });
+        }
+    </script>
+</body>
+</html>

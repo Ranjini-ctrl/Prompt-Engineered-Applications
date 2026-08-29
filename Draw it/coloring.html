@@ -1,0 +1,393 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Coloring Book - Draw It</title>
+    <link href="https://fonts.googleapis.com/css2?family=Fredoka:wght@300;400;500;600;700&family=Baloo+2:wght@400;500;600;700;800&family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="css/style.css">
+    <link rel="stylesheet" href="css/animations.css">
+    <link rel="stylesheet" href="css/claymorphism.css">
+    <link rel="stylesheet" href="css/responsive.css">
+</head>
+<body class="coloring-page">
+    <!-- Header -->
+    <div class="coloring-header">
+        <a href="home.html" class="btn btn-small">← Home</a>
+        <h1>🖍️ Coloring Book</h1>
+    </div>
+
+    <!-- Template Selection View -->
+    <div id="templateView" class="template-view">
+        <div class="container">
+            <div class="category-tabs">
+                <button class="tab-btn active" data-category="fruits">🍎 Fruits</button>
+                <button class="tab-btn" data-category="animals">🐱 Animals</button>
+                <button class="tab-btn" data-category="objects">🚗 Objects</button>
+                <button class="tab-btn" data-category="flowers">🌹 Flowers</button>
+                <button class="tab-btn" data-category="kids">👦 Kids</button>
+                <button class="tab-btn" data-category="festivals">🎄 Festivals</button>
+            </div>
+
+            <div class="templates-grid" id="templatesGrid">
+                <!-- Templates will be loaded here dynamically -->
+            </div>
+        </div>
+    </div>
+
+    <!-- Coloring Canvas View -->
+    <div id="coloringView" class="coloring-view" style="display: none;">
+        <div class="coloring-container">
+            <!-- Toolbar -->
+            <div class="toolbar clay-card">
+                <div class="tool-section">
+                    <h3>Tools</h3>
+                    <div class="tool-buttons">
+                        <button class="tool-btn active" data-tool="brush" title="Brush">
+                            <span class="tool-icon">🖌️</span>
+                            <span class="tool-label">Brush</span>
+                        </button>
+                        <button class="tool-btn" data-tool="bucket" title="Fill">
+                            <span class="tool-icon">🪣</span>
+                            <span class="tool-label">Fill</span>
+                        </button>
+                        <button class="tool-btn" data-tool="eraser" title="Eraser">
+                            <span class="tool-icon">🧹</span>
+                            <span class="tool-label">Eraser</span>
+                        </button>
+                    </div>
+                </div>
+
+                <div class="tool-section">
+                    <h3>Size</h3>
+                    <input type="range" id="brushSize" min="5" max="50" value="20" class="slider">
+                    <span id="brushSizeValue">20</span>
+                </div>
+
+                <div class="tool-section">
+                    <h3>Color</h3>
+                    <input type="color" id="colorPicker" value="#FF0000" class="color-picker-input">
+                    <div class="quick-colors">
+                        <div class="color-swatch" data-color="#FF0000" style="background: #FF0000;"></div>
+                        <div class="color-swatch" data-color="#FF70A6" style="background: #FF70A6;"></div>
+                        <div class="color-swatch" data-color="#FFD670" style="background: #FFD670;"></div>
+                        <div class="color-swatch" data-color="#7AE582" style="background: #7AE582;"></div>
+                        <div class="color-swatch" data-color="#70D6FF" style="background: #70D6FF;"></div>
+                        <div class="color-swatch" data-color="#0000FF" style="background: #0000FF;"></div>
+                        <div class="color-swatch" data-color="#A685FF" style="background: #A685FF;"></div>
+                        <div class="color-swatch" data-color="#8B4513" style="background: #8B4513;"></div>
+                        <div class="color-swatch" data-color="#FFA500" style="background: #FFA500;"></div>
+                        <div class="color-swatch" data-color="#00FF00" style="background: #00FF00;"></div>
+                    </div>
+                </div>
+
+                <div class="tool-section">
+                    <h3>Actions</h3>
+                    <div class="action-buttons">
+                        <button id="undoBtn" class="btn btn-small">↶ Undo</button>
+                        <button id="redoBtn" class="btn btn-small">↷ Redo</button>
+                        <button id="clearBtn" class="btn btn-small btn-danger">🗑️ Clear</button>
+                        <button id="saveBtn" class="btn btn-small btn-primary">💾 Save</button>
+                        <button id="downloadBtn" class="btn btn-small btn-secondary">⬇️ Download</button>
+                        <button id="backBtn" class="btn btn-small btn-outline">← Back</button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Canvas Area -->
+            <div class="canvas-wrapper">
+                <canvas id="coloringCanvas"></canvas>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Check authentication
+        if (!localStorage.getItem('drawit_currentUser')) {
+            window.location.href = 'login.html';
+        }
+
+        // Templates
+        const templates = {
+            fruits: [
+                { name: 'Apple', icon: '🍎' },
+                { name: 'Orange', icon: '🍊' },
+                { name: 'Banana', icon: '🍌' },
+                { name: 'Grapes', icon: '🍇' },
+                { name: 'Mango', icon: '🥭' },
+                { name: 'Strawberry', icon: '🍓' }
+            ],
+            animals: [
+                { name: 'Cat', icon: '🐱' },
+                { name: 'Dog', icon: '🐶' },
+                { name: 'Lion', icon: '🦁' },
+                { name: 'Elephant', icon: '🐘' },
+                { name: 'Rabbit', icon: '🐰' },
+                { name: 'Bird', icon: '🐦' }
+            ],
+            objects: [
+                { name: 'Car', icon: '🚗' },
+                { name: 'House', icon: '🏠' },
+                { name: 'Rocket', icon: '🚀' },
+                { name: 'Train', icon: '🚂' },
+                { name: 'Airplane', icon: '✈️' },
+                { name: 'Boat', icon: '⛵' }
+            ],
+            flowers: [
+                { name: 'Rose', icon: '🌹' },
+                { name: 'Sunflower', icon: '🌻' },
+                { name: 'Tulip', icon: '🌷' },
+                { name: 'Daisy', icon: '🌼' },
+                { name: 'Hibiscus', icon: '🌺' },
+                { name: 'Blossom', icon: '🌸' }
+            ],
+            kids: [
+                { name: 'Boy', icon: '👦' },
+                { name: 'Girl', icon: '👧' },
+                { name: 'Baby', icon: '👶' },
+                { name: 'Princess', icon: '👸' },
+                { name: 'Superhero', icon: '🦸' },
+                { name: 'Fairy', icon: '🧚' }
+            ],
+            festivals: [
+                { name: 'Christmas', icon: '🎄' },
+                { name: 'Diwali', icon: '🪔' },
+                { name: 'Halloween', icon: '🎃' },
+                { name: 'Easter', icon: '🐰' },
+                { name: 'Birthday', icon: '🎂' },
+                { name: 'Fireworks', icon: '🎆' }
+            ]
+        };
+
+        let canvas, ctx;
+        let isColoring = false;
+        let currentTool = 'brush';
+        let currentColor = '#FF0000';
+        let brushSize = 20;
+        let currentTemplate = null;
+        let history = [];
+        let historyStep = -1;
+
+        document.addEventListener('DOMContentLoaded', () => {
+            // Category tabs
+            document.querySelectorAll('.tab-btn').forEach(tab => {
+                tab.addEventListener('click', function() {
+                    document.querySelectorAll('.tab-btn').forEach(t => t.classList.remove('active'));
+                    this.classList.add('active');
+                    loadTemplates(this.dataset.category);
+                });
+            });
+            
+            loadTemplates('fruits');
+        });
+
+        function loadTemplates(category) {
+            const grid = document.getElementById('templatesGrid');
+            grid.innerHTML = '';
+            
+            templates[category].forEach(template => {
+                const card = document.createElement('div');
+                card.className = 'template-card';
+                card.innerHTML = `
+                    <div class="template-preview">${template.icon}</div>
+                    <div class="template-name">${template.name}</div>
+                `;
+                card.addEventListener('click', () => openColoring(template));
+                grid.appendChild(card);
+            });
+        }
+
+        function openColoring(template) {
+            currentTemplate = template;
+            document.getElementById('templateView').style.display = 'none';
+            document.getElementById('coloringView').style.display = 'block';
+            
+            canvas = document.getElementById('coloringCanvas');
+            ctx = canvas.getContext('2d');
+            
+            const wrapper = document.querySelector('.canvas-wrapper');
+            canvas.width = wrapper.clientWidth - 40;
+            canvas.height = wrapper.clientHeight - 40;
+            
+            // Draw template
+            ctx.fillStyle = '#FFFFFF';
+            ctx.fillRect(0, 0, canvas.width, canvas.height);
+            ctx.font = `${canvas.height * 0.6}px Arial`;
+            ctx.textAlign = 'center';
+            ctx.textBaseline = 'middle';
+            ctx.strokeStyle = '#000000';
+            ctx.lineWidth = 3;
+            ctx.strokeText(template.icon, canvas.width / 2, canvas.height / 2);
+            
+            saveState();
+            initColoringTools();
+        }
+
+        function initColoringTools() {
+            // Mouse events
+            canvas.addEventListener('mousedown', startColoring);
+            canvas.addEventListener('mousemove', color);
+            canvas.addEventListener('mouseup', stopColoring);
+            canvas.addEventListener('mouseout', stopColoring);
+            
+            // Touch events
+            canvas.addEventListener('touchstart', handleTouch);
+            canvas.addEventListener('touchmove', handleTouch);
+            canvas.addEventListener('touchend', stopColoring);
+            
+            // Tools
+            document.querySelectorAll('.tool-btn').forEach(btn => {
+                btn.addEventListener('click', function() {
+                    document.querySelectorAll('.tool-btn').forEach(b => b.classList.remove('active'));
+                    this.classList.add('active');
+                    currentTool = this.dataset.tool;
+                });
+            });
+            
+            // Brush size
+            const brushSizeSlider = document.getElementById('brushSize');
+            const brushSizeValue = document.getElementById('brushSizeValue');
+            brushSizeSlider.addEventListener('input', function() {
+                brushSize = parseInt(this.value);
+                brushSizeValue.textContent = brushSize;
+            });
+            
+            // Color picker
+            const colorPicker = document.getElementById('colorPicker');
+            colorPicker.addEventListener('input', function() {
+                currentColor = this.value;
+            });
+            
+            // Color swatches
+            document.querySelectorAll('.color-swatch').forEach(swatch => {
+                swatch.addEventListener('click', function() {
+                    currentColor = this.dataset.color;
+                    colorPicker.value = currentColor;
+                });
+            });
+            
+            // Actions
+            document.getElementById('undoBtn').addEventListener('click', undo);
+            document.getElementById('redoBtn').addEventListener('click', redo);
+            document.getElementById('clearBtn').addEventListener('click', () => {
+                if (confirm('Start over?')) {
+                    openColoring(currentTemplate);
+                }
+            });
+            document.getElementById('saveBtn').addEventListener('click', () => {
+                const currentUser = localStorage.getItem('drawit_currentUser');
+                const users = JSON.parse(localStorage.getItem('drawit_users') || '[]');
+                const user = users.find(u => u.email === currentUser);
+                
+                const drawings = JSON.parse(localStorage.getItem('drawit_drawings') || '[]');
+                drawings.push({
+                    id: Date.now().toString(),
+                    userId: user.id,
+                    title: currentTemplate.name + ' - Colored',
+                    imageData: canvas.toDataURL(),
+                    createdDate: new Date().toISOString(),
+                    type: 'coloring'
+                });
+                localStorage.setItem('drawit_drawings', JSON.stringify(drawings));
+                alert('Saved! 🎨');
+            });
+            document.getElementById('downloadBtn').addEventListener('click', () => {
+                const link = document.createElement('a');
+                link.download = currentTemplate.name.toLowerCase() + '-colored.png';
+                link.href = canvas.toDataURL();
+                link.click();
+                alert('Downloaded! 🎉');
+            });
+            document.getElementById('backBtn').addEventListener('click', () => {
+                document.getElementById('coloringView').style.display = 'none';
+                document.getElementById('templateView').style.display = 'block';
+                history = [];
+                historyStep = -1;
+            });
+        }
+
+        function startColoring(e) {
+            isColoring = true;
+            color(e);
+        }
+
+        function color(e) {
+            if (!isColoring && currentTool !== 'bucket') return;
+            
+            const pos = getMousePos(e);
+            
+            if (currentTool === 'brush') {
+                ctx.globalCompositeOperation = 'source-over';
+                ctx.fillStyle = currentColor;
+                ctx.beginPath();
+                ctx.arc(pos.x, pos.y, brushSize / 2, 0, Math.PI * 2);
+                ctx.fill();
+            } else if (currentTool === 'eraser') {
+                ctx.globalCompositeOperation = 'destination-out';
+                ctx.fillStyle = 'rgba(0,0,0,1)';
+                ctx.beginPath();
+                ctx.arc(pos.x, pos.y, brushSize / 2, 0, Math.PI * 2);
+                ctx.fill();
+                ctx.globalCompositeOperation = 'source-over';
+            }
+        }
+
+        function stopColoring() {
+            if (isColoring) {
+                isColoring = false;
+                saveState();
+            }
+        }
+
+        function handleTouch(e) {
+            e.preventDefault();
+            const touch = e.touches[0];
+            const mouseEvent = new MouseEvent(e.type === 'touchstart' ? 'mousedown' : 'mousemove', {
+                clientX: touch.clientX,
+                clientY: touch.clientY
+            });
+            canvas.dispatchEvent(mouseEvent);
+        }
+
+        function getMousePos(e) {
+            const rect = canvas.getBoundingClientRect();
+            return {
+                x: (e.clientX - rect.left) * (canvas.width / rect.width),
+                y: (e.clientY - rect.top) * (canvas.height / rect.height)
+            };
+        }
+
+        function saveState() {
+            historyStep++;
+            if (historyStep < history.length) {
+                history.length = historyStep;
+            }
+            history.push(canvas.toDataURL());
+        }
+
+        function undo() {
+            if (historyStep > 0) {
+                historyStep--;
+                const img = new Image();
+                img.src = history[historyStep];
+                img.onload = () => {
+                    ctx.clearRect(0, 0, canvas.width, canvas.height);
+                    ctx.drawImage(img, 0, 0);
+                };
+            }
+        }
+
+        function redo() {
+            if (historyStep < history.length - 1) {
+                historyStep++;
+                const img = new Image();
+                img.src = history[historyStep];
+                img.onload = () => {
+                    ctx.clearRect(0, 0, canvas.width, canvas.height);
+                    ctx.drawImage(img, 0, 0);
+                };
+            }
+        }
+    </script>
+</body>
+</html>

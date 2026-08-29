@@ -1,0 +1,136 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Home - Draw It</title>
+    <link href="https://fonts.googleapis.com/css2?family=Fredoka:wght@300;400;500;600;700&family=Baloo+2:wght@400;500;600;700;800&family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="css/style.css">
+    <link rel="stylesheet" href="css/animations.css">
+    <link rel="stylesheet" href="css/claymorphism.css">
+    <link rel="stylesheet" href="css/responsive.css">
+</head>
+<body class="home-page">
+    <!-- Background Decorations -->
+    <div class="bg-decorations">
+        <div class="cloud cloud-1"></div>
+        <div class="cloud cloud-2"></div>
+        <div class="cloud cloud-3"></div>
+        <div class="balloon balloon-1">🎈</div>
+        <div class="balloon balloon-2">🎈</div>
+        <div class="star star-1">⭐</div>
+        <div class="star star-2">✨</div>
+        <div class="star star-3">⭐</div>
+        <div class="sun">☀️</div>
+        <div class="rainbow"></div>
+    </div>
+
+    <div class="container">
+        <!-- Welcome Section -->
+        <div class="welcome-section clay-card">
+            <div class="welcome-content">
+                <div class="user-avatar-large" id="userAvatar">👦</div>
+                <div class="welcome-text">
+                    <h1>Hello, <span id="userName">Artist</span>! 👋</h1>
+                    <p class="welcome-message">Ready to create something amazing today?</p>
+                    <div class="user-stats">
+                        <div class="stat-item">
+                            <span class="stat-number" id="totalDrawings">0</span>
+                            <span class="stat-label">Drawings</span>
+                        </div>
+                        <div class="stat-item">
+                            <span class="stat-number" id="favoriteColor">🎨</span>
+                            <span class="stat-label">Favorite</span>
+                        </div>
+                    </div>
+                </div>
+                <div class="mascot-waving">
+                    <div class="mascot">🎨</div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Main Menu Cards -->
+        <div class="menu-grid">
+            <a href="drawing.html" class="menu-card clay-card card-primary">
+                <div class="card-icon">🎨</div>
+                <h2>Free Drawing</h2>
+                <p>Create your own masterpiece from scratch</p>
+                <div class="card-decoration">✏️</div>
+            </a>
+
+            <a href="coloring.html" class="menu-card clay-card card-secondary">
+                <div class="card-icon">🖍️</div>
+                <h2>Coloring Book</h2>
+                <p>Color beautiful pre-made drawings</p>
+                <div class="card-decoration">🎨</div>
+            </a>
+
+            <a href="gallery.html" class="menu-card clay-card card-tertiary">
+                <div class="card-icon">🖼️</div>
+                <h2>My Gallery</h2>
+                <p>View all your saved artwork</p>
+                <div class="card-decoration">🌟</div>
+            </a>
+
+            <a href="profile.html" class="menu-card clay-card card-accent">
+                <div class="card-icon">👤</div>
+                <h2>Profile</h2>
+                <p>Manage your account settings</p>
+                <div class="card-decoration">⚙️</div>
+            </a>
+        </div>
+
+        <!-- Logout Button -->
+        <div class="home-footer">
+            <button id="logoutBtn" class="btn btn-outline">
+                Logout 👋
+            </button>
+        </div>
+    </div>
+
+    <script>
+        // Check authentication
+        const currentUser = localStorage.getItem('drawit_currentUser');
+        if (!currentUser) {
+            window.location.href = 'login.html';
+        }
+        
+        // Load user data
+        document.addEventListener('DOMContentLoaded', () => {
+            const users = JSON.parse(localStorage.getItem('drawit_users') || '[]');
+            const user = users.find(u => u.email === currentUser);
+            
+            if (!user) {
+                window.location.href = 'login.html';
+                return;
+            }
+            
+            // Avatar emojis
+            const avatars = {
+                boy: '👦', girl: '👧', cat: '🐱',
+                rabbit: '🐰', fox: '🦊', panda: '🐼'
+            };
+            
+            // Display user info
+            document.getElementById('userName').textContent = user.username;
+            document.getElementById('userAvatar').textContent = avatars[user.avatar] || '👦';
+            
+            // Get drawings count
+            const allDrawings = JSON.parse(localStorage.getItem('drawit_drawings') || '[]');
+            const userDrawings = allDrawings.filter(d => d.userId === user.id);
+            document.getElementById('totalDrawings').textContent = userDrawings.length;
+            document.getElementById('favoriteColor').textContent = user.favoriteColor || '🎨';
+            
+            // Logout
+            document.getElementById('logoutBtn').addEventListener('click', () => {
+                if (confirm('Are you sure you want to logout? 👋')) {
+                    localStorage.removeItem('drawit_currentUser');
+                    alert('Logged out successfully!');
+                    window.location.href = 'index.html';
+                }
+            });
+        });
+    </script>
+</body>
+</html>

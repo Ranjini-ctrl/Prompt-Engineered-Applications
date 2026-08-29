@@ -1,0 +1,142 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Login - Draw It</title>
+    <link href="https://fonts.googleapis.com/css2?family=Fredoka:wght@300;400;500;600;700&family=Baloo+2:wght@400;500;600;700;800&family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="css/style.css">
+    <link rel="stylesheet" href="css/animations.css">
+    <link rel="stylesheet" href="css/claymorphism.css">
+    <link rel="stylesheet" href="css/responsive.css">
+</head>
+<body class="auth-page">
+    <!-- Background Decorations -->
+    <div class="bg-decorations">
+        <div class="cloud cloud-1"></div>
+        <div class="cloud cloud-2"></div>
+        <div class="balloon balloon-1">🎈</div>
+        <div class="star star-1">⭐</div>
+        <div class="star star-2">✨</div>
+    </div>
+
+    <div class="container">
+        <div class="auth-container">
+            <div class="auth-card clay-card">
+                <div class="auth-header">
+                    <h1>✏️ Welcome Back!</h1>
+                    <p>Login to continue your creative journey</p>
+                </div>
+
+                <form id="loginForm" class="auth-form">
+                    <div class="form-group">
+                        <label for="email">Email</label>
+                        <input type="email" id="email" name="email" placeholder="your@email.com" required>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="password">Password</label>
+                        <input type="password" id="password" name="password" placeholder="Enter your password" required>
+                    </div>
+
+                    <div class="form-group form-options">
+                        <label class="checkbox-label">
+                            <input type="checkbox" id="rememberMe" name="rememberMe">
+                            <span>Remember Me</span>
+                        </label>
+                        <a href="#" class="forgot-link">Forgot Password?</a>
+                    </div>
+
+                    <button type="submit" class="btn btn-primary btn-block">
+                        Login 🎨
+                    </button>
+                </form>
+
+                <div class="auth-footer">
+                    <p>Don't have an account? <a href="signup.html">Sign up here</a></p>
+                    <p><a href="index.html">← Back to Home</a></p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Initialize login page functionality
+        document.addEventListener('DOMContentLoaded', () => {
+            const loginForm = document.getElementById('loginForm');
+            const forgotLink = document.querySelector('.forgot-link');
+            
+            // Form submission
+            loginForm.addEventListener('submit', function(e) {
+                e.preventDefault();
+                
+                const email = document.getElementById('email').value.trim();
+                const password = document.getElementById('password').value;
+                const rememberMe = document.getElementById('rememberMe').checked;
+                
+                // Validation
+                if (!email || !email.includes('@')) {
+                    alert('Please enter a valid email');
+                    return;
+                }
+                
+                if (!password) {
+                    alert('Please enter your password');
+                    return;
+                }
+                
+                // Get users from localStorage
+                const users = JSON.parse(localStorage.getItem('drawit_users') || '[]');
+                const user = users.find(u => u.email === email && u.password === password);
+                
+                if (user) {
+                    // Save login
+                    localStorage.setItem('drawit_currentUser', email);
+                    
+                    if (rememberMe) {
+                        localStorage.setItem('drawit_remember', 'true');
+                    } else {
+                        localStorage.removeItem('drawit_remember');
+                    }
+                    
+                    // Show success
+                    const btn = loginForm.querySelector('.btn-primary');
+                    btn.textContent = 'Success! 🎉';
+                    btn.style.background = 'linear-gradient(135deg, #7AE582, #70D6FF)';
+                    
+                    alert('Welcome back, ' + user.username + '! 🎨');
+                    
+                    // Redirect to home
+                    setTimeout(() => {
+                        window.location.href = 'home.html';
+                    }, 1000);
+                } else {
+                    alert('Invalid email or password');
+                    loginForm.style.animation = 'shake 0.5s';
+                    setTimeout(() => {
+                        loginForm.style.animation = '';
+                    }, 500);
+                }
+            });
+            
+            // Forgot password
+            if (forgotLink) {
+                forgotLink.addEventListener('click', function(e) {
+                    e.preventDefault();
+                    alert('Password reset feature coming soon! 🔐');
+                });
+            }
+            
+            // Auto-fill if remembered
+            const remember = localStorage.getItem('drawit_remember');
+            if (remember === 'true') {
+                const currentUser = localStorage.getItem('drawit_currentUser');
+                if (currentUser) {
+                    document.getElementById('email').value = currentUser;
+                    document.getElementById('rememberMe').checked = true;
+                }
+            }
+        });
+    </script>
+</body>
+</html>

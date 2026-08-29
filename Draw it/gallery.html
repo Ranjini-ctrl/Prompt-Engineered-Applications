@@ -1,0 +1,220 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>My Gallery - Draw It</title>
+    <link href="https://fonts.googleapis.com/css2?family=Fredoka:wght@300;400;500;600;700&family=Baloo+2:wght@400;500;600;700;800&family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="css/style.css">
+    <link rel="stylesheet" href="css/animations.css">
+    <link rel="stylesheet" href="css/claymorphism.css">
+    <link rel="stylesheet" href="css/responsive.css">
+</head>
+<body class="gallery-page">
+    <!-- Header -->
+    <div class="gallery-header">
+        <a href="home.html" class="btn btn-small">← Home</a>
+        <h1>🖼️ My Gallery</h1>
+        <div class="gallery-stats">
+            <span id="galleryCount">0</span> Artworks
+        </div>
+    </div>
+
+    <div class="container">
+        <!-- Empty State -->
+        <div id="emptyGallery" class="empty-state" style="display: none;">
+            <div class="empty-icon">🎨</div>
+            <h2>Your gallery is empty!</h2>
+            <p>Start creating amazing artwork to see them here</p>
+            <div class="empty-actions">
+                <a href="drawing.html" class="btn btn-primary">Start Drawing</a>
+                <a href="coloring.html" class="btn btn-secondary">Color Something</a>
+            </div>
+        </div>
+
+        <!-- Gallery Grid -->
+        <div id="galleryGrid" class="gallery-grid">
+            <!-- Gallery items will be loaded here dynamically -->
+        </div>
+    </div>
+
+    <!-- View Modal -->
+    <div id="viewModal" class="modal">
+        <div class="modal-content modal-large clay-card">
+            <button class="modal-close" id="closeModal">×</button>
+            <div class="modal-image">
+                <img id="modalImage" src="" alt="Artwork">
+            </div>
+            <div class="modal-info">
+                <h2 id="modalTitle">Artwork Title</h2>
+                <p id="modalDate">Created on: --</p>
+            </div>
+            <div class="modal-actions">
+                <button id="downloadModalBtn" class="btn btn-primary">⬇️ Download</button>
+                <button id="deleteModalBtn" class="btn btn-danger">🗑️ Delete</button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Check authentication
+        if (!localStorage.getItem('drawit_currentUser')) {
+            window.location.href = 'login.html';
+        }
+
+        let currentDrawing = null;
+
+        document.addEventListener('DOMContentLoaded', () => {
+            loadGallery();
+            setupModal();
+        });
+
+        function loadGallery() {
+            const currentUser = localStorage.getItem('drawit_currentUser');
+            const users = JSON.parse(localStorage.getItem('drawit_users') || '[]');
+            const user = users.find(u => u.email === currentUser);
+            
+            const allDrawings = JSON.parse(localStorage.getItem('drawit_drawings') || '[]');
+            const drawings = allDrawings.filter(d => d.userId === user.id);
+            
+            const galleryGrid = document.getElementById('galleryGrid');
+            const emptyGallery = document.getElementById('emptyGallery');
+            const galleryCount = document.getElementById('galleryCount');
+            
+            galleryCount.textContent = drawings.length;
+            
+            if (drawings.length === 0) {
+                emptyGallery.style.display = 'block';
+                galleryGrid.style.display = 'none';
+            } else {
+                emptyGallery.style.display = 'none';
+                galleryGrid.style.display = 'grid';
+                galleryGrid.innerHTML = '';
+                
+                drawings.sort((a, b) => new Date(b.createdDate) - new Date(a.createdDate));
+                
+                drawings.forEach(drawing => {
+                    const item = document.createElement('div');
+                    item.className = 'gallery-item';
+                    
+                    const date = new Date(drawing.createdDate);
+                    const dateStr = date.toLocaleDateString('en-US', { 
+                        year: 'numeric', 
+                        month: 'short', 
+                        day: 'numeric',
+                        hour: '2-digit',
+                        minute: '2-digit'
+                    });
+                    
+                    item.innerHTML = `
+                        <img class="gallery-thumbnail" src="${drawing.imageData}" alt="${drawing.title}">
+                        <div class="gallery-info">
+                            <div class="gallery-title">${drawing.title}</div>
+                            <div class="gallery-date">${dateStr}</div>
+                            <div class="gallery-actions">
+                                <button class="icon-btn" onclick="viewDrawing('${drawing.id}')">👁️ View</button>
+                                <button class="icon-btn" onclick="downloadDrawing('${drawing.id}')">⬇️ Download</button>
+                                <button class="icon-btn" onclick="deleteDrawing('${drawing.id}')">🗑️ Delete</button>
+                            </div>
+                        </div>
+                    `;
+                    
+                    item.onclick = () => viewDrawing(drawing.id);
+                    galleryGrid.appendChild(item);
+                });
+            }
+        }
+
+        function viewDrawing(drawingId) {
+            const allDrawings = JSON.parse(localStorage.getItem('drawit_drawings') || '[]');
+            currentDrawing = allDrawings.find(d => d.id === drawingId);
+            
+            if (!currentDrawing) return;
+            
+            const modal = document.getElementById('viewModal');
+            const modalImage = document.getElementById('modalImage');
+            const modalTitle = document.getElementById('modalTitle');
+            const modalDate = document.getElementById('modalDate');
+            
+            modalImage.src = currentDrawing.imageData;
+            modalTitle.textContent = currentDrawing.title;
+            
+            const date = new Date(currentDrawing.createdDate);
+            const dateStr = date.toLocaleDateString('en-US', { 
+                year: 'numeric', 
+                month: 'short', 
+                day: 'numeric',
+                hour: '2-digit',
+                minute: '2-digit'
+            });
+            modalDate.textContent = 'Created on: ' + dateStr;
+            
+            modal.classList.add('active');
+        }
+
+        function downloadDrawing(drawingId) {
+            event.stopPropagation();
+            const allDrawings = JSON.parse(localStorage.getItem('drawit_drawings') || '[]');
+            const drawing = allDrawings.find(d => d.id === drawingId);
+            
+            if (drawing) {
+                const link = document.createElement('a');
+                link.download = drawing.title.replace(/\s+/g, '-').toLowerCase() + '.png';
+                link.href = drawing.imageData;
+                link.click();
+                alert('Download started! 📥');
+            }
+        }
+
+        function deleteDrawing(drawingId) {
+            event.stopPropagation();
+            if (confirm('Delete this drawing? This cannot be undone.')) {
+                let allDrawings = JSON.parse(localStorage.getItem('drawit_drawings') || '[]');
+                allDrawings = allDrawings.filter(d => d.id !== drawingId);
+                localStorage.setItem('drawit_drawings', JSON.stringify(allDrawings));
+                alert('Drawing deleted');
+                loadGallery();
+                
+                const modal = document.getElementById('viewModal');
+                modal.classList.remove('active');
+            }
+        }
+
+        function setupModal() {
+            const modal = document.getElementById('viewModal');
+            const closeBtn = document.getElementById('closeModal');
+            const downloadModalBtn = document.getElementById('downloadModalBtn');
+            const deleteModalBtn = document.getElementById('deleteModalBtn');
+            
+            closeBtn.onclick = () => modal.classList.remove('active');
+            
+            downloadModalBtn.onclick = () => {
+                if (currentDrawing) {
+                    const link = document.createElement('a');
+                    link.download = currentDrawing.title.replace(/\s+/g, '-').toLowerCase() + '.png';
+                    link.href = currentDrawing.imageData;
+                    link.click();
+                    alert('Download started! 📥');
+                }
+            };
+            
+            deleteModalBtn.onclick = () => {
+                if (currentDrawing && confirm('Delete this drawing?')) {
+                    let allDrawings = JSON.parse(localStorage.getItem('drawit_drawings') || '[]');
+                    allDrawings = allDrawings.filter(d => d.id !== currentDrawing.id);
+                    localStorage.setItem('drawit_drawings', JSON.stringify(allDrawings));
+                    alert('Drawing deleted');
+                    modal.classList.remove('active');
+                    loadGallery();
+                }
+            };
+            
+            modal.onclick = (e) => {
+                if (e.target === modal) {
+                    modal.classList.remove('active');
+                }
+            };
+        }
+    </script>
+</body>
+</html>

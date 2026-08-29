@@ -1,0 +1,624 @@
+/* ===========================
+   ANIMATIONS
+   =========================== */
+
+/* Bounce Animation */
+@keyframes bounce {
+    0%, 100% {
+        transform: translateY(0);
+    }
+    50% {
+        transform: translateY(-20px);
+    }
+}
+
+/* Float Animation */
+@keyframes float {
+    0%, 100% {
+        transform: translateY(0px);
+    }
+    50% {
+        transform: translateY(-10px);
+    }
+}
+
+/* Wave Animation */
+@keyframes wave {
+    0%, 100% {
+        transform: rotate(0deg);
+    }
+    25% {
+        transform: rotate(20deg);
+    }
+    75% {
+        transform: rotate(-20deg);
+    }
+}
+
+/* Rainbow Animation */
+@keyframes rainbow {
+    0% {
+        filter: hue-rotate(0deg);
+    }
+    100% {
+        filter: hue-rotate(360deg);
+    }
+}
+
+/* Wiggle Animation */
+@keyframes wiggle {
+    0%, 100% {
+        transform: rotate(0deg);
+    }
+    25% {
+        transform: rotate(-5deg);
+    }
+    75% {
+        transform: rotate(5deg);
+    }
+}
+
+/* Pulse Animation */
+@keyframes pulse {
+    0%, 100% {
+        transform: scale(1);
+    }
+    50% {
+        transform: scale(1.05);
+    }
+}
+
+/* Fade In */
+@keyframes fadeIn {
+    from {
+        opacity: 0;
+    }
+    to {
+        opacity: 1;
+    }
+}
+
+/* Slide In From Left */
+@keyframes slideInLeft {
+    from {
+        transform: translateX(-100%);
+        opacity: 0;
+    }
+    to {
+        transform: translateX(0);
+        opacity: 1;
+    }
+}
+
+/* Slide In From Right */
+@keyframes slideInRight {
+    from {
+        transform: translateX(100%);
+        opacity: 0;
+    }
+    to {
+        transform: translateX(0);
+        opacity: 1;
+    }
+}
+
+/* Slide In From Top */
+@keyframes slideInTop {
+    from {
+        transform: translateY(-100%);
+        opacity: 0;
+    }
+    to {
+        transform: translateY(0);
+        opacity: 1;
+    }
+}
+
+/* Zoom In */
+@keyframes zoomIn {
+    from {
+        transform: scale(0);
+        opacity: 0;
+    }
+    to {
+        transform: scale(1);
+        opacity: 1;
+    }
+}
+
+/* Rotate */
+@keyframes rotate {
+    from {
+        transform: rotate(0deg);
+    }
+    to {
+        transform: rotate(360deg);
+    }
+}
+
+/* Spin */
+@keyframes spin {
+    0% {
+        transform: rotate(0deg);
+    }
+    100% {
+        transform: rotate(360deg);
+    }
+}
+
+/* Twinkle */
+@keyframes twinkle {
+    0%, 100% {
+        opacity: 1;
+        transform: scale(1);
+    }
+    50% {
+        opacity: 0.3;
+        transform: scale(0.8);
+    }
+}
+
+/* Shake */
+@keyframes shake {
+    0%, 100% {
+        transform: translateX(0);
+    }
+    25% {
+        transform: translateX(-10px);
+    }
+    75% {
+        transform: translateX(10px);
+    }
+}
+
+/* Background Decorations Animations */
+.bg-decorations {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    pointer-events: none;
+    z-index: 1;
+    overflow: hidden;
+}
+
+/* Cloud Animations */
+.cloud {
+    position: absolute;
+    width: 100px;
+    height: 60px;
+    background: white;
+    border-radius: 100px;
+    opacity: 0.8;
+    animation: floatCloud 30s linear infinite;
+    box-shadow: 0 8px 20px rgba(0, 0, 0, 0.1);
+}
+
+.cloud::before,
+.cloud::after {
+    content: '';
+    position: absolute;
+    background: white;
+    border-radius: 50%;
+}
+
+.cloud::before {
+    width: 50px;
+    height: 50px;
+    top: -25px;
+    left: 10px;
+}
+
+.cloud::after {
+    width: 60px;
+    height: 60px;
+    top: -30px;
+    right: 10px;
+}
+
+.cloud-1 {
+    top: 10%;
+    left: -100px;
+    animation-delay: 0s;
+}
+
+.cloud-2 {
+    top: 30%;
+    left: -100px;
+    animation-delay: 10s;
+}
+
+.cloud-3 {
+    top: 60%;
+    left: -100px;
+    animation-delay: 20s;
+}
+
+@keyframes floatCloud {
+    from {
+        transform: translateX(0);
+    }
+    to {
+        transform: translateX(calc(100vw + 100px));
+    }
+}
+
+/* Bird Animation */
+.bird {
+    position: absolute;
+    font-size: 2rem;
+    animation: flyBird 25s linear infinite;
+}
+
+.bird-1 {
+    top: 15%;
+    left: -50px;
+    animation-delay: 0s;
+}
+
+.bird-2 {
+    top: 40%;
+    left: -50px;
+    animation-delay: 12s;
+}
+
+@keyframes flyBird {
+    0% {
+        transform: translateX(0) translateY(0);
+    }
+    25% {
+        transform: translateX(25vw) translateY(-20px);
+    }
+    50% {
+        transform: translateX(50vw) translateY(20px);
+    }
+    75% {
+        transform: translateX(75vw) translateY(-10px);
+    }
+    100% {
+        transform: translateX(100vw) translateY(0);
+    }
+}
+
+/* Balloon Animation */
+.balloon {
+    position: absolute;
+    font-size: 3rem;
+    animation: floatBalloon 15s ease-in-out infinite;
+}
+
+.balloon-1 {
+    left: 10%;
+    bottom: -100px;
+    animation-delay: 0s;
+}
+
+.balloon-2 {
+    left: 80%;
+    bottom: -100px;
+    animation-delay: 7s;
+}
+
+@keyframes floatBalloon {
+    0% {
+        transform: translateY(0) rotate(0deg);
+    }
+    50% {
+        transform: translateY(-120vh) rotate(10deg);
+    }
+    100% {
+        transform: translateY(-120vh) rotate(0deg);
+    }
+}
+
+/* Star Animation */
+.star {
+    position: absolute;
+    font-size: 2rem;
+    animation: twinkle 2s ease-in-out infinite;
+}
+
+.star-1 {
+    top: 20%;
+    right: 10%;
+    animation-delay: 0s;
+}
+
+.star-2 {
+    top: 60%;
+    right: 20%;
+    animation-delay: 1s;
+}
+
+.star-3 {
+    top: 40%;
+    left: 15%;
+    animation-delay: 0.5s;
+}
+
+/* Sun Animation */
+.sun {
+    position: absolute;
+    top: 50px;
+    right: 50px;
+    font-size: 4rem;
+    animation: rotate 20s linear infinite;
+}
+
+/* Rainbow */
+.rainbow {
+    position: absolute;
+    top: 20%;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 300px;
+    height: 150px;
+    border-radius: 300px 300px 0 0;
+    border: 20px solid transparent;
+    border-top-color: #FF0000;
+    border-right-color: #FF7F00;
+    border-left-color: #FF7F00;
+    opacity: 0.3;
+    animation: fadeInOut 10s ease-in-out infinite;
+}
+
+@keyframes fadeInOut {
+    0%, 100% {
+        opacity: 0.1;
+    }
+    50% {
+        opacity: 0.3;
+    }
+}
+
+/* Floating Crayon */
+.floating-crayon {
+    position: absolute;
+    font-size: 2.5rem;
+    animation: floatCrayon 20s ease-in-out infinite;
+}
+
+.crayon-1 {
+    top: 25%;
+    left: -50px;
+    animation-delay: 0s;
+}
+
+.crayon-2 {
+    top: 70%;
+    left: -50px;
+    animation-delay: 10s;
+}
+
+@keyframes floatCrayon {
+    0% {
+        transform: translateX(0) rotate(0deg);
+    }
+    100% {
+        transform: translateX(calc(100vw + 50px)) rotate(360deg);
+    }
+}
+
+/* Loading Screen */
+.loading-screen {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(135deg, #E0F7FF 0%, #FFE5F0 50%, #FFF5E6 100%);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    z-index: 9999;
+    transition: opacity 0.5s ease;
+}
+
+.loading-content {
+    text-align: center;
+}
+
+.pencil-draw {
+    margin-bottom: 30px;
+}
+
+.pencil {
+    animation: drawPencil 2s ease-in-out infinite;
+}
+
+.draw-path {
+    stroke-dasharray: 200;
+    stroke-dashoffset: 200;
+    animation: drawPath 2s ease-in-out infinite;
+}
+
+@keyframes drawPencil {
+    0%, 100% {
+        transform: rotate(0deg);
+    }
+    50% {
+        transform: rotate(10deg);
+    }
+}
+
+@keyframes drawPath {
+    0% {
+        stroke-dashoffset: 200;
+    }
+    100% {
+        stroke-dashoffset: 0;
+    }
+}
+
+.loading-text {
+    font-family: 'Fredoka', cursive;
+    font-size: 3rem;
+    background: linear-gradient(135deg, #FF70A6, #A685FF, #70D6FF);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+    animation: pulse 1.5s ease-in-out infinite;
+}
+
+/* Confetti Animation */
+.confetti-canvas {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    pointer-events: none;
+    z-index: 9999;
+}
+
+/* Paint Splash */
+@keyframes splash {
+    0% {
+        transform: scale(0);
+        opacity: 1;
+    }
+    100% {
+        transform: scale(2);
+        opacity: 0;
+    }
+}
+
+/* Sparkle Effect */
+@keyframes sparkle {
+    0%, 100% {
+        opacity: 0;
+        transform: scale(0) rotate(0deg);
+    }
+    50% {
+        opacity: 1;
+        transform: scale(1) rotate(180deg);
+    }
+}
+
+/* Page Transitions */
+.page-enter {
+    animation: fadeIn 0.5s ease;
+}
+
+.page-exit {
+    animation: fadeOut 0.5s ease;
+}
+
+@keyframes fadeOut {
+    from {
+        opacity: 1;
+    }
+    to {
+        opacity: 0;
+    }
+}
+
+/* Hover Wobble */
+.wobble:hover {
+    animation: wobble 0.5s ease;
+}
+
+@keyframes wobble {
+    0%, 100% {
+        transform: translateX(0);
+    }
+    25% {
+        transform: translateX(-10px) rotate(-5deg);
+    }
+    75% {
+        transform: translateX(10px) rotate(5deg);
+    }
+}
+
+/* Magic Dust */
+@keyframes magicDust {
+    0% {
+        transform: translateY(0) scale(1);
+        opacity: 1;
+    }
+    100% {
+        transform: translateY(-100px) scale(0);
+        opacity: 0;
+    }
+}
+
+/* Blob Animation */
+@keyframes blob {
+    0%, 100% {
+        border-radius: 60% 40% 30% 70% / 60% 30% 70% 40%;
+    }
+    50% {
+        border-radius: 30% 60% 70% 40% / 50% 60% 30% 60%;
+    }
+}
+
+/* Card Lift */
+.card-lift {
+    transition: all 0.3s ease;
+}
+
+.card-lift:hover {
+    transform: translateY(-10px);
+    box-shadow: 
+        12px 12px 24px rgba(163, 177, 198, 0.7),
+        -12px -12px 24px rgba(255, 255, 255, 0.6);
+}
+
+/* Button Ripple Effect */
+@keyframes ripple {
+    0% {
+        transform: scale(0);
+        opacity: 1;
+    }
+    100% {
+        transform: scale(4);
+        opacity: 0;
+    }
+}
+
+/* Gradient Animation */
+@keyframes gradientShift {
+    0% {
+        background-position: 0% 50%;
+    }
+    50% {
+        background-position: 100% 50%;
+    }
+    100% {
+        background-position: 0% 50%;
+    }
+}
+
+/* Utility Animation Classes */
+.animate-bounce {
+    animation: bounce 2s infinite;
+}
+
+.animate-float {
+    animation: float 3s ease-in-out infinite;
+}
+
+.animate-wave {
+    animation: wave 1s ease-in-out infinite;
+}
+
+.animate-wiggle {
+    animation: wiggle 0.5s ease infinite;
+}
+
+.animate-pulse {
+    animation: pulse 2s ease-in-out infinite;
+}
+
+.animate-spin {
+    animation: spin 2s linear infinite;
+}
+
+.animate-twinkle {
+    animation: twinkle 2s ease-in-out infinite;
+}
+
+.animate-shake {
+    animation: shake 0.5s ease infinite;
+}
